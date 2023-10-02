@@ -8,27 +8,82 @@ use Symfony\Component\Process\Process;
 
 class InstallFrontendComponents extends Command
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'install:frontend';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Install Tailwind CSS and selected frontend components.';
 
+    /**
+     * Filesystem instance for file operations.
+     *
+     * @var Filesystem
+     */
     protected $filesystem;
 
+    /**
+     * Create a new command instance.
+     *
+     * @param Filesystem $filesystem
+     */
     public function __construct(Filesystem $filesystem)
     {
         parent::__construct();
         $this->filesystem = $filesystem;
     }
 
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
     public function handle()
     {
         $this->info('Installing Tailwind CSS...');
 
         $this->installTailwindCss();
 
-        $this->info('Frontend components installed successfully.');
+        $stack = $this->choice('Choose a frontend stack to install:', [
+            'None',
+            'AlpineJS + HTMX',
+            'HTMX + LiveWire',
+            'InertiaJS + Svelte',
+        ], 0, 3);
+
+        switch ($stack) {
+            case 'None':
+                $this->info('No additional frontend stack selected.');
+                break;
+            case 'AlpineJS + HTMX':
+                $this->installAlpineAndHTMX();
+                break;
+            case 'HTMX + LiveWire':
+                $this->installHTMXAndLiveWire();
+                break;
+            case 'InertiaJS + Svelte':
+                //$this->installInertiaAndSvelte();
+                break;
+            default:
+                $this->error('Invalid choice. No additional frontend stack will be installed.');
+        }
+
+
+        $this->info('Frontend components installed.');
     }
 
+    /**
+     * Install Tailwind CSS and configure it.
+     *
+     * @return void
+     */
     protected function installTailwindCss()
     {
         $this->info('Installing Tailwind CSS dependencies...');
@@ -46,6 +101,69 @@ class InstallFrontendComponents extends Command
         $this->info('Tailwind CSS installed and configured successfully.');
     }
 
+    /**
+     * Install AlpineJS and HTMX.
+     *
+     * @return void
+     */
+    protected function installAlpineAndHTMX()
+    {
+        $this->info('Installing AlpineJS and HTMX...');
+
+        $this->executeCommand('npm install -D alpinejs htmx.org');
+
+        $content = /** @lang JavaScript */
+            <<<EOL
+        import Alpine from 'alpinejs'
+        import Htmx from 'htmx.org'
+
+        window.Alpine = Alpine
+        window.Htmx = Htmx
+
+        Alpine.start()
+        EOL;
+
+        $this->updateAppJs($content);
+
+        $this->info('AlpineJS and HTMX installed successfully.');
+    }
+
+    /**
+     * Install HTMX and LiveWire.
+     *
+     * @return void
+     */
+    protected function installHTMXAndLiveWire()
+    {
+        $this->info('Installing HTMX and LiveWire...');
+
+        $this->executeCommand('npm install -D htmx.org');
+
+
+        $content = /** @lang JavaScript */
+            <<<EOL
+        import Htmx from 'htmx.org'
+
+        window.Htmx = Htmx
+
+        EOL;
+
+        $this->updateAppJs($content);
+
+        $this->executeCommand('composer require livewire/livewire');
+
+        $this->addLiveWireScripts();
+
+        $this->info('HTMX and LiveWire installed successfully.');
+    }
+
+    /**
+     * Execute a shell command.
+     *
+     * @param string $command The shell command to execute.
+     *
+     * @return void
+     */
     protected function executeCommand($command)
     {
         $process = Process::fromShellCommandline($command, base_path());
@@ -58,6 +176,11 @@ class InstallFrontendComponents extends Command
         }
     }
 
+    /**
+     * Replace the content of the Tailwind CSS configuration file.
+     *
+     * @return void
+     */
     protected function replaceTailwindConfig()
     {
         $configFile = base_path('tailwind.config.js');
@@ -80,6 +203,37 @@ class InstallFrontendComponents extends Command
         $this->filesystem->put($configFile, $content);
     }
 
+    /**
+     * Add LiveWire scripts to the app layout file.
+     *
+     * @return void
+     */
+    protected function addLiveWireScripts()
+    {
+        $layoutFile = resource_path('views/layouts/app.blade.php');
+
+        if ($this->filesystem->exists($layoutFile)) {
+            $content = $this->filesystem->get($layoutFile);
+            if (strpos($content, '@livewireScripts') === false) {
+                $content = str_replace('</head>', "@livewireScripts\n\t</head>", $content);
+                $content = str_replace('</body>', "@livewireScripts\n\t</body>", $content);
+
+                $this->filesystem->put($layoutFile, $content);
+
+                $this->info('LiveWire scripts added to the app layout.');
+            } else {
+                $this->info('LiveWire scripts is already present in the app layout.');
+            }
+        } else {
+            $this->error('App layout file not found.');
+        }
+    }
+
+    /**
+     * Update the content of the app.css file with Tailwind CSS directives.
+     *
+     * @return void
+     */
     protected function updateAppCss()
     {
         $appCssFile = resource_path('css/app.css');
@@ -92,5 +246,19 @@ class InstallFrontendComponents extends Command
         EOL;
 
         $this->filesystem->put($appCssFile, $content);
+    }
+
+    /**
+     * Append content to the app.js file.
+     *
+     * @param string $content The content to append to the app.js file.
+     *
+     * @return void
+     */
+    protected function updateAppJs($content)
+    {
+        $appJsFile = resource_path('js/app.js');
+
+        $this->filesystem->append($appJsFile, $content);
     }
 }
