@@ -1,66 +1,101 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
+<h1 align="center">
+    <a href="https://moneysherlock.com/#gh-light-mode-only">
+        Laravel Starter Kit
+    </a>
+</h1>
+
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+    <i align="center">This is a starter kit for Laravel projects</i>
 </p>
 
-## About Laravel
+<h4 align="center">
+    <img src="https://img.shields.io/badge/release-v0.1.0-blue" alt="Project Version">
+    <img src="https://img.shields.io/badge/laravel-10.10-blueviolet" alt="Laravel Version">
+    <img src="https://img.shields.io/badge/php-%3E=8.1-royalblue" alt="PHP Version">
+    <img src="https://img.shields.io/badge/platform-*nix-lightgrey" alt="Platform">
+    <img src="https://img.shields.io/badge/license-proprietary-green" alt="License">
+</h4>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Introduction
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Laravel Starter Kit** is a collection of tools and libraries to make developing your Laravel projects easier. This set includes several useful packages and tools that will help you quickly get started and easily develop web applications in Laravel.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+**⚠️ Before contributing to the project, please, carefully read through this README document.**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Included Packages
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Laravel Starter Kit includes the following packages and tools:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper): Enhances your Laravel development experience with IDE support.
 
-## Laravel Sponsors
+- [Laravel Lang](https://github.com/overtrue/laravel-lang): Simplifies language management in your Laravel applications, ideal for multilingual projects.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- [Spatie's Ray](https://github.com/spatie/ray): A powerful real-time debugging tool that provides a new level of insight into your application.
 
-### Premium Partners
+- [Laravel Telescope](https://laravel.com/docs/10.x/telescope): A full-featured debugging and introspection tool for your Laravel applications.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- [Laravel Pint](https://laravel.com/docs/10.x/pint): A opinionated PHP code style fixer for your application.
 
-## Contributing
+- [Pest](https://pestphp.com/): A modern and elegant testing framework for writing tests in PHP.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ️Getting Started
 
-## Code of Conduct
+### Installing
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Follow these steps to install and set up the project:
 
-## Security Vulnerabilities
+1. Clone the repository from GitHub:
+   ```
+   git clone git@github.com:ideal-creative-lab/laravel-starter-kit.git
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. Navigate to the project directory:
+   ```
+   cd laravel-starter-kit
+   ```
 
-## License
+3. Install the project dependencies using Composer:
+   ```
+   composer install
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. Copy the `.env.example` file to `.env`:
+   ```
+   cp .env.example .env
+   ```
+
+5. Open the `.env` file in a text editor (e.g., vim) and update the necessary configuration values.
+
+6. Generate an application key:
+   ```
+   php artisan key:generate
+   ```
+
+8. For using <a href='https://laravel.com/docs/10.x/telescope'>laravel telescope</a> run following command:
+   ```
+   php artisan telescope:install
+   ```
+
+7. Run migration:
+   ```
+   php artisan migrate
+   ```
+
+8. Start the development server:
+   ```
+   php artisan serve
+   ```
+
+9. Build the project assets:
+   ```
+   npm run dev
+   ```
+
+You can now access the project by visiting the URL provided by the development server.
+
+## Contribute
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
