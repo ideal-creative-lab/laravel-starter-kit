@@ -75,9 +75,7 @@ class InstallFrontendComponents extends Command
                 $this->error('Invalid choice. No additional frontend stack will be installed.');
         }
 
-        $this->executeCommand('npm run dev');
-
-        $this->info('Frontend components installed.');
+        $this->info('Frontend components installed. Please run npm run dev command to start.');
     }
 
     /**
@@ -103,7 +101,7 @@ class InstallFrontendComponents extends Command
 
         $this->info('Installing Standart.JS dependencies...');
 
-        $this->executeCommand('nnpm install standard --save-dev');
+        $this->executeCommand('npm install standard --save-dev');
 
         $this->info('Standart.JS installed and configured successfully.');
 
@@ -122,13 +120,13 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-                import Alpine from 'alpinejs'
-                import Htmx from 'htmx.org'
+            import Alpine from 'alpinejs'
+            import Htmx from 'htmx.org'
 
-                window.Alpine = Alpine
-                window.Htmx = Htmx
+            window.Alpine = Alpine
+            window.Htmx = Htmx
 
-                Alpine.start()
+            Alpine.start()
             EOL;
 
         $this->updateAppJs($content);
@@ -150,9 +148,9 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-                import Htmx from 'htmx.org'
+            import Htmx from 'htmx.org'
 
-                window.Htmx = Htmx
+            window.Htmx = Htmx
             EOL;
 
         $this->updateAppJs($content);
@@ -184,25 +182,22 @@ class InstallFrontendComponents extends Command
         $this->executeCommand('npm install @inertiajs/svelte');
 
         $content = <<<'EOL'
-            import { createInertiaApp } from '@inertiajs/svelte';
+        import { createInertiaApp } from '@inertiajs/svelte'
 
-            createInertiaApp({
-              resolve: (name) => {
-                const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true });
-                return pages[./Pages/${name}.svelte];
-              },
-              setup: ({ el, App, props }) => {
-                new App({
-                  target: el,
-                  props,
-                });
-              },
-            });
+        createInertiaApp({
+          resolve: name => {
+            const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true })
+            return pages[`./Pages/${name}.svelte`]
+          },
+          setup({ el, App, props }) {
+            new App({ target: el, props })
+          },
+        })
         EOL;
 
         $this->updateAppJs($content);
 
-        $this->info('InertiaJS and Svelte installed successfully.');
+        $this->info('InertiaJS and Svelte installed successfully. Please follow instruction to run https://inertiajs.com/client-side-setup?frontend=svelte&backend=laravel!');
     }
 
 
@@ -236,17 +231,17 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-                module.exports = {
-                    content: [
-                        "./resources/**/*.blade.php",
-                        "./resources/**/*.js",
-                        "./resources/**/*.vue",
-                    ],
-                    theme: {
-                        extend: {},
-                    },
-                    plugins: [],
-                }
+            module.exports = {
+                content: [
+                    "./resources/**/*.blade.php",
+                    "./resources/**/*.js",
+                    "./resources/**/*.vue",
+                ],
+                theme: {
+                    extend: {},
+                },
+                plugins: [],
+            }
             EOL;
 
         $this->filesystem->put($configFile, $content);
@@ -292,9 +287,9 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang CSS */
             <<<EOL
-                @tailwind base;
-                @tailwind components;
-                @tailwind utilities;
+            @tailwind base;
+            @tailwind components;
+            @tailwind utilities;
             EOL;
 
         $this->filesystem->put($appCssFile, $content);
