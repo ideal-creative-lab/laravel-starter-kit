@@ -69,6 +69,7 @@ class InstallFrontendComponents extends Command
                 $this->installHTMXAndLiveWire();
                 break;
             case 'InertiaJS + Svelte':
+                //TODO update stack installation
                 $this->installInertiaAndSvelte();
                 break;
             default:
@@ -95,7 +96,15 @@ class InstallFrontendComponents extends Command
         $this->replaceTailwindConfig();
 
         $this->info('Updating app.css...');
-        $this->updateAppCss();
+
+        $content = /** @lang CSS */
+            <<<EOL
+            @tailwind base;
+            @tailwind components;
+            @tailwind utilities;
+            EOL;
+
+        $this->updateAppCss($content);
 
         $this->info('Tailwind CSS installed and configured successfully.');
 
@@ -167,6 +176,7 @@ class InstallFrontendComponents extends Command
      *
      * @return void
      */
+    //TODO update stack installation
     protected function installInertiaAndSvelte()
     {
         $this->info('Installing InertiaJS and Svelte...');
@@ -181,19 +191,20 @@ class InstallFrontendComponents extends Command
 
         $this->executeCommand('npm install @inertiajs/svelte');
 
-        $content = <<<'EOL'
-        import { createInertiaApp } from '@inertiajs/svelte'
+        $content =
+            <<<'EOL'
+            import { createInertiaApp } from '@inertiajs/svelte'
 
-        createInertiaApp({
-          resolve: name => {
-            const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true })
-            return pages[`./Pages/${name}.svelte`]
-          },
-          setup({ el, App, props }) {
-            new App({ target: el, props })
-          },
-        })
-        EOL;
+            createInertiaApp({
+              resolve: name => {
+                const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true })
+                return pages[`./Pages/${name}.svelte`]
+              },
+              setup({ el, App, props }) {
+                new App({ target: el, props })
+              },
+            })
+            EOL;
 
         $this->updateAppJs($content);
 
@@ -281,16 +292,9 @@ class InstallFrontendComponents extends Command
      *
      * @return void
      */
-    protected function updateAppCss()
+    protected function updateAppCss($content)
     {
         $appCssFile = resource_path('css/app.css');
-
-        $content = /** @lang CSS */
-            <<<EOL
-            @tailwind base;
-            @tailwind components;
-            @tailwind utilities;
-            EOL;
 
         $this->filesystem->put($appCssFile, $content);
     }
@@ -314,16 +318,17 @@ class InstallFrontendComponents extends Command
      *
      * @return void
      */
+    //TODO update stack installation
     protected function registerInertiaMiddleware()
     {
         $kernelFile = app_path('Http/Kernel.php');
 
-        if (!file_exists($kernelFile)) {
+        if (!$this->filesystem->exists($kernelFile)) {
             $this->error('Kernel file not found.');
             return;
         }
 
-        $kernelContent = file_get_contents($kernelFile);
+        $kernelContent = $this->filesystem->get($kernelFile);
 
         if (strpos($kernelContent, 'HandleInertiaRequests::class') !== false) {
             $this->info('HandleInertiaRequests middleware is already registered in Kernel.');
@@ -336,7 +341,7 @@ class InstallFrontendComponents extends Command
             $kernelContent
         );
 
-        file_put_contents($kernelFile, $kernelContent);
+        $this->filesystem->put($kernelFile, $kernelContent);
 
         $this->info('HandleInertiaRequests middleware registered in Kernel.');
     }
