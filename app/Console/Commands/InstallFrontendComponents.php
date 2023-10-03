@@ -49,7 +49,7 @@ class InstallFrontendComponents extends Command
     {
         $this->info('Installing Tailwind CSS...');
 
-        $this->installTailwindCss();
+        $this->installTailwindCssAndStandartJs();
 
         $stack = $this->choice('Choose a frontend stack to install:', [
             'None',
@@ -69,22 +69,23 @@ class InstallFrontendComponents extends Command
                 $this->installHTMXAndLiveWire();
                 break;
             case 'InertiaJS + Svelte':
-                //$this->installInertiaAndSvelte();
+                $this->installInertiaAndSvelte();
                 break;
             default:
                 $this->error('Invalid choice. No additional frontend stack will be installed.');
         }
 
+        $this->executeCommand('npm run dev');
 
         $this->info('Frontend components installed.');
     }
 
     /**
-     * Install Tailwind CSS and configure it.
+     * Install Tailwind CSS, StandartJS and configure them.
      *
      * @return void
      */
-    protected function installTailwindCss()
+    protected function installTailwindCssAndStandartJs()
     {
         $this->info('Installing Tailwind CSS dependencies...');
         $this->executeCommand('npm install -D tailwindcss postcss autoprefixer');
@@ -99,6 +100,13 @@ class InstallFrontendComponents extends Command
         $this->updateAppCss();
 
         $this->info('Tailwind CSS installed and configured successfully.');
+
+        $this->info('Installing Standart.JS dependencies...');
+
+        $this->executeCommand('nnpm install standard --save-dev');
+
+        $this->info('Standart.JS installed and configured successfully.');
+
     }
 
     /**
@@ -114,14 +122,14 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-        import Alpine from 'alpinejs'
-        import Htmx from 'htmx.org'
+                import Alpine from 'alpinejs'
+                import Htmx from 'htmx.org'
 
-        window.Alpine = Alpine
-        window.Htmx = Htmx
+                window.Alpine = Alpine
+                window.Htmx = Htmx
 
-        Alpine.start()
-        EOL;
+                Alpine.start()
+            EOL;
 
         $this->updateAppJs($content);
 
@@ -142,20 +150,61 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-        import Htmx from 'htmx.org'
+                import Htmx from 'htmx.org'
 
-        window.Htmx = Htmx
-
-        EOL;
+                window.Htmx = Htmx
+            EOL;
 
         $this->updateAppJs($content);
 
         $this->executeCommand('composer require livewire/livewire');
 
-        $this->addLiveWireScripts();
+        $this->addLayoutScripts('@livewireScripts');
 
         $this->info('HTMX and LiveWire installed successfully.');
     }
+
+    /**
+     * Install InertiaJS and Svelte.
+     *
+     * @return void
+     */
+    protected function installInertiaAndSvelte()
+    {
+        $this->info('Installing InertiaJS and Svelte...');
+
+        $this->executeCommand('composer require inertiajs/inertia-laravel');
+
+        $this->addLayoutScripts('@inertiaHead');
+
+        $this->executeCommand('php artisan inertia:middleware');
+
+        $this->registerInertiaMiddleware();
+
+        $this->executeCommand('npm install @inertiajs/svelte');
+
+        $content = <<<'EOL'
+            import { createInertiaApp } from '@inertiajs/svelte';
+
+            createInertiaApp({
+              resolve: (name) => {
+                const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true });
+                return pages[./Pages/${name}.svelte];
+              },
+              setup: ({ el, App, props }) => {
+                new App({
+                  target: el,
+                  props,
+                });
+              },
+            });
+        EOL;
+
+        $this->updateAppJs($content);
+
+        $this->info('InertiaJS and Svelte installed successfully.');
+    }
+
 
     /**
      * Execute a shell command.
@@ -187,42 +236,45 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang JavaScript */
             <<<EOL
-        module.exports = {
-            content: [
-                "./resources/**/*.blade.php",
-                "./resources/**/*.js",
-                "./resources/**/*.vue",
-            ],
-            theme: {
-                extend: {},
-            },
-            plugins: [],
-        }
-        EOL;
+                module.exports = {
+                    content: [
+                        "./resources/**/*.blade.php",
+                        "./resources/**/*.js",
+                        "./resources/**/*.vue",
+                    ],
+                    theme: {
+                        extend: {},
+                    },
+                    plugins: [],
+                }
+            EOL;
 
         $this->filesystem->put($configFile, $content);
     }
 
     /**
-     * Add LiveWire scripts to the app layout file.
+     * Add scripts to the app layout file.
      *
      * @return void
      */
-    protected function addLiveWireScripts()
+    protected function addLayoutScripts($script)
     {
         $layoutFile = resource_path('views/layouts/app.blade.php');
 
         if ($this->filesystem->exists($layoutFile)) {
             $content = $this->filesystem->get($layoutFile);
-            if (strpos($content, '@livewireScripts') === false) {
-                $content = str_replace('</head>', "@livewireScripts\n\t</head>", $content);
-                $content = str_replace('</body>', "@livewireScripts\n\t</body>", $content);
-
+            if (strpos($content, $script) === false) {
+                $content = str_replace('</head>', $script . "\n\t</head>", $content);
+                if ($script == '@livewireScripts') {
+                    $content = str_replace('</body>', $script . "\n\t</body>", $content);
+                } else {
+                    $content = str_replace("@yield('content')", "@inertia", $content);
+                }
                 $this->filesystem->put($layoutFile, $content);
 
-                $this->info('LiveWire scripts added to the app layout.');
+                $this->info('Scripts added to the app layout.');
             } else {
-                $this->info('LiveWire scripts is already present in the app layout.');
+                $this->info('Scripts is already present in the app layout.');
             }
         } else {
             $this->error('App layout file not found.');
@@ -240,10 +292,10 @@ class InstallFrontendComponents extends Command
 
         $content = /** @lang CSS */
             <<<EOL
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-        EOL;
+                @tailwind base;
+                @tailwind components;
+                @tailwind utilities;
+            EOL;
 
         $this->filesystem->put($appCssFile, $content);
     }
@@ -261,4 +313,37 @@ class InstallFrontendComponents extends Command
 
         $this->filesystem->append($appJsFile, $content);
     }
+
+    /**
+     * Register Inertia Middleware.
+     *
+     * @return void
+     */
+    protected function registerInertiaMiddleware()
+    {
+        $kernelFile = app_path('Http/Kernel.php');
+
+        if (!file_exists($kernelFile)) {
+            $this->error('Kernel file not found.');
+            return;
+        }
+
+        $kernelContent = file_get_contents($kernelFile);
+
+        if (strpos($kernelContent, 'HandleInertiaRequests::class') !== false) {
+            $this->info('HandleInertiaRequests middleware is already registered in Kernel.');
+            return;
+        }
+
+        $kernelContent = str_replace(
+            "'web' => [",
+            "'web' => [\n            \\App\\Http\\Middleware\\HandleInertiaRequests::class,",
+            $kernelContent
+        );
+
+        file_put_contents($kernelFile, $kernelContent);
+
+        $this->info('HandleInertiaRequests middleware registered in Kernel.');
+    }
+
 }
