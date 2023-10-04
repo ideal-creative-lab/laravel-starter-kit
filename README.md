@@ -74,22 +74,27 @@ Follow these steps to install and set up the project:
    php artisan key:generate
    ```
 
-8. For using <a href='https://laravel.com/docs/10.x/telescope'>laravel telescope</a> run following command:
+7. For using <a href='https://laravel.com/docs/10.x/telescope'>laravel telescope</a> run following command:
    ```
    php artisan telescope:install
    ```
+   
+8. Install necessary backend packages:
+   ``` 
+   php artisan install:backend
+   ``` 
 
-7. Run migration:
+9. Run migration:
    ```
    php artisan migrate
    ```
 
-8. Start the development server:
+10. Start the development server:
    ```
    php artisan serve
    ```
 
-9. Build the project assets:
+11. Build the project assets:
    ```
    npm run dev
    ```
