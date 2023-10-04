@@ -1,11 +1,10 @@
 @component('mail::message')
 
-Please follow the link below to reset your password:
+Please make form on your site to reset your password using token {{ $token }}
 
-@component('mail::button', ['url' => route('password.reset'), 'color' => 'success'])
-Reset Password using token {{ $token }}
-@endcomponent
+Request example {{ route('password.reset') . '?token=' . $token . '&email=admin@admin.com&password=12345678' }}
 
 Best regards,<br>
 {{ config('app.name') }}
+
 @endcomponent
