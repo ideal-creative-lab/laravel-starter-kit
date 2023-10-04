@@ -78,23 +78,28 @@ Follow these steps to install and set up the project:
    ```
    php artisan telescope:install
    ```
+   
+8. Install necessary backend packages:
+   ``` 
+   php artisan install:backend
+   ``` 
 
-8. Run migration:
+9. Run migration:
    ```
    php artisan migrate
    ```
 
-9. Start the development server:
+10. Start the development server:
    ```
    php artisan serve
    ```
 
-10. Install frontend stack:
+11. Install frontend stack:
    ```
    php artisan install:frontend
    ```
 
-11. Build the project assets:
+12. Build the project assets:
    ```
    npm run dev
    ```
