@@ -54,7 +54,7 @@ class InstallFrontendComponents extends Command
         $stack = $this->choice('Choose a frontend stack to install:', [
             'None',
             'AlpineJS + HTMX',
-            'HTMX + LiveWire',
+            'LiveWire',
             'InertiaJS + Svelte',
         ], 0, 3);
 
@@ -65,8 +65,8 @@ class InstallFrontendComponents extends Command
             case 'AlpineJS + HTMX':
                 $this->installAlpineAndHTMX();
                 break;
-            case 'HTMX + LiveWire':
-                $this->installHTMXAndLiveWire();
+            case 'LiveWire':
+                $this->installLiveWire();
                 break;
             case 'InertiaJS + Svelte':
                 //TODO update stack installation
@@ -144,31 +144,19 @@ class InstallFrontendComponents extends Command
     }
 
     /**
-     * Install HTMX and LiveWire.
+     * Install LiveWire.
      *
      * @return void
      */
-    protected function installHTMXAndLiveWire()
+    protected function installLiveWire()
     {
-        $this->info('Installing HTMX and LiveWire...');
-
-        $this->executeCommand('npm install -D htmx.org');
-
-
-        $content = /** @lang JavaScript */
-            <<<EOL
-            import Htmx from 'htmx.org'
-
-            window.Htmx = Htmx
-            EOL;
-
-        $this->updateAppJs($content);
+        $this->info('Installing LiveWire...');
 
         $this->executeCommand('composer require livewire/livewire');
 
         $this->addLayoutScripts('@livewireScripts');
 
-        $this->info('HTMX and LiveWire installed successfully.');
+        $this->info('LiveWire installed successfully.');
     }
 
     /**
