@@ -94,7 +94,12 @@ Follow these steps to install and set up the project:
    php artisan serve
    ```
 
-11. Build the project assets:
+11. Install frontend stack:
+   ```
+   php artisan install:frontend
+   ```
+
+12. Build the project assets:
    ```
    npm run dev
    ```
