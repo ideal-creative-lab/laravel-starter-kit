@@ -106,6 +106,15 @@ Follow these steps to install and set up the project:
 
 You can now access the project by visiting the URL provided by the development server.
 
+## How to Install and Use the Authentication Component
+
+If you'd like to install the authentication component using our Laravel Starter Kit, please run following command:
+```
+install:auth
+```
+It will install authentication components such as controllers, requests, mail templates, routes, and a database migration, enabling user authentication in a Laravel application.
+
+
 ## Contribute
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
