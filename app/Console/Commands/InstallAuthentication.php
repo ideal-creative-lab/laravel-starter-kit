@@ -97,7 +97,7 @@ class InstallAuthentication extends Command
      */
     protected function updateRoutes()
     {
-        $routesContent = $this->filesystem->get(base_path('stubs/routes/web.stub'));
+        $routesContent = $this->filesystem->get(app_path('Console/Commands/stubs/routes/web.stub'));
         $this->filesystem->append(base_path('routes/web.php'), $routesContent);
 
         $this->info('Authentication routes added successfully.');
@@ -109,7 +109,7 @@ class InstallAuthentication extends Command
     protected function createUsersTableMigration()
     {
         $migrationFile = database_path('migrations/' . date('Y_m_d_His', time()) . '_add_confirmation_token_to_users.php');
-        $migrationContent = $this->filesystem->get(base_path('/stubs/database/migrations/add_confirmation_token_to_users.stub'));
+        $migrationContent = $this->filesystem->get(app_path('Console/Commands/stubs/database/migrations/add_confirmation_token_to_users.stub'));
         $this->filesystem->put($migrationFile, $migrationContent);
 
         $this->info('Users table migration created successfully.');
@@ -126,7 +126,7 @@ class InstallAuthentication extends Command
     {
         foreach ($filePaths as $sourcePath => $destinationPath) {
             $this->makeDirectoryIfNeeded($destinationPath);
-            $this->filesystem->copy(base_path('stubs/' . $sourcePath), $destinationPath);
+            $this->filesystem->copy(app_path('Console/Commands/stubs/' . $sourcePath), $destinationPath);
             $this->info("$destinationPath is created");
         }
     }
