@@ -164,41 +164,34 @@ class InstallFrontendComponents extends Command
      *
      * @return void
      */
-    //TODO update stack installation
     protected function installInertiaAndSvelte()
     {
         $this->info('Installing InertiaJS and Svelte...');
 
         $this->executeCommand('composer require inertiajs/inertia-laravel');
+        $this->info('Dependencies installed.');
 
         $this->addLayoutScripts('@inertiaHead');
 
         $this->executeCommand('php artisan inertia:middleware');
-
         $this->registerInertiaMiddleware();
+        $this->info('Middleware configured.');
 
         $this->executeCommand('npm install @inertiajs/svelte');
-
-        $content =
-            <<<'EOL'
-            import { createInertiaApp } from '@inertiajs/svelte'
-
-            createInertiaApp({
-              resolve: name => {
-                const pages = import.meta.glob('./Pages/**/*.svelte', { eager: true })
-                return pages[`./Pages/${name}.svelte`]
-              },
-              setup({ el, App, props }) {
-                new App({ target: el, props })
-              },
-            })
-            EOL;
-
+        $content = $this->filesystem->get(app_path('Console/Commands/stubs/inertiajs/js/app.stub'));
         $this->updateAppJs($content);
+        $this->info('Scripts configured.');
 
-        $this->info('InertiaJS and Svelte installed successfully. Please follow instruction to run https://inertiajs.com/client-side-setup?frontend=svelte&backend=laravel!');
+        $this->updateInertiaRoutes();
+
+        $this->createSvelteHomePage();
+
+        $this->configureSvelteVite();
+
+        $this->configureInertiaRoot();
+
+        $this->info('InertiaJS and Svelte installed successfully.');
     }
-
 
     /**
      * Execute a shell command.
@@ -302,11 +295,21 @@ class InstallFrontendComponents extends Command
     }
 
     /**
+     * Update the application's routes.
+     */
+    protected function updateInertiaRoutes()
+    {
+        $routesContent = $this->filesystem->get(app_path('Console/Commands/stubs/inertiajs/routes.stub'));
+        $this->filesystem->put(base_path('routes/web.php'), $routesContent);
+
+        $this->info('Routes added successfully.');
+    }
+
+    /**
      * Register Inertia Middleware.
      *
      * @return void
      */
-    //TODO update stack installation
     protected function registerInertiaMiddleware()
     {
         $kernelFile = app_path('Http/Kernel.php');
@@ -334,4 +337,47 @@ class InstallFrontendComponents extends Command
         $this->info('HandleInertiaRequests middleware registered in Kernel.');
     }
 
+    /**
+     * Configure Inertia Root view.
+     */
+    protected function configureInertiaRoot()
+    {
+        $content = $this->filesystem->get(app_path('Http/Middleware/HandleInertiaRequests.php'));
+        $content = str_replace('protected $rootView = \'app\';', 'protected $rootView = \'layouts.app\';', $content);
+        $this->filesystem->put(app_path('Http/Middleware/HandleInertiaRequests.php'), $content);
+        $this->info('Inertia root configured');
+    }
+
+    /**
+     * Create svelte vite settings.
+     */
+    protected function configureSvelteVite()
+    {
+        $this->executeCommand('npm install --save-dev @sveltejs/vite-plugin-svelte');
+        $this->filesystem->copy(app_path('Console/Commands/stubs/inertiajs/vite.stub'), base_path('vite.config.js'));
+        $this->info('Vite scripts configured');
+    }
+
+    /**
+     * Create svelte home page.
+     */
+    protected function createSvelteHomePage()
+    {
+        $this->makeDirectoryIfNeeded(resource_path('js/Pages/Home.svelte'));
+        $this->filesystem->copy(app_path('Console/Commands/stubs/inertiajs/js/Pages/Home.stub'), resource_path('js/Pages/Home.svelte'));
+        $this->info("Homepage created.");
+    }
+
+    /**
+     * Create the directory for the file if it doesn't exist.
+     *
+     * @param string $path
+     */
+    protected function makeDirectoryIfNeeded($path)
+    {
+        $directory = dirname($path);
+        if (!$this->filesystem->exists($directory)) {
+            $this->filesystem->makeDirectory($directory, 0755, true, true);
+        }
+    }
 }
