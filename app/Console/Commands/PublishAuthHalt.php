@@ -62,6 +62,8 @@ class PublishAuthHalt extends Command
         ];
 
         $this->copyViews($views);
+
+        $this->publishRoutes();
     }
 
     /**
@@ -91,5 +93,15 @@ class PublishAuthHalt extends Command
         if (!$this->filesystem->exists($directory)) {
             $this->filesystem->makeDirectory($directory, 0755, true, true);
         }
+    }
+
+    /**
+     * Publish UI routes.
+     */
+    protected function publishRoutes()
+    {
+        $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/ui-routes.stub'));
+        $this->filesystem->append(base_path('routes/web.php'), $routes);
+        $this->info("Routes is updated");
     }
 }
