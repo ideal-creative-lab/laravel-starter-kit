@@ -66,6 +66,8 @@ class PublishAuthHalt extends Command
         $this->publishRoutes();
 
         $this->updateControllers();
+
+        $this->updateMail();
     }
 
     /**
@@ -80,7 +82,7 @@ class PublishAuthHalt extends Command
             $destinationPath = resource_path('views/auth/' . $view . '.blade.php');
             $this->makeDirectoryIfNeeded($destinationPath);
             $this->filesystem->copy($stubPath, $destinationPath);
-            $this->info("$destinationPath is created");
+            $this->info("$destinationPath created");
         }
     }
 
@@ -104,7 +106,7 @@ class PublishAuthHalt extends Command
     {
         $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/ui-routes.stub'));
         $this->filesystem->append(base_path('routes/web.php'), $routes);
-        $this->info("Routes is updated");
+        $this->info("Routes updated");
     }
 
     /**
@@ -120,7 +122,14 @@ class PublishAuthHalt extends Command
         foreach ($filePaths as $sourcePath => $destinationPath) {
             $controller = $this->filesystem->get($sourcePath);
             $this->filesystem->put($destinationPath, $controller);
-            $this->info("$controller is updated with UI");
         }
+        $this->info("Controllers updated with UI");
+    }
+
+    protected function updateMail()
+    {
+        $routes = $this->filesystem->get(app_path('Console/Commands/stubs/views/emails/password_reset_ui.blade.php'));
+        $this->filesystem->put(resource_path('views/emails/password_reset.blade.php'), $routes);
+        $this->info("Email template updated");
     }
 }
