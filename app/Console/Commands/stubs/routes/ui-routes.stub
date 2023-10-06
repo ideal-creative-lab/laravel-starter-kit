@@ -1,0 +1,7 @@
+// Authentication Forms Routes
+Route::get('/register', [\App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login.form');
+
+//Password reset Routes
+Route::get('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showForgetPasswordForm'])->name('password.forget.form');
+Route::get('/reset-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset.form');
