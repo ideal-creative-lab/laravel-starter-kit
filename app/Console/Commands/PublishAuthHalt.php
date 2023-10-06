@@ -64,6 +64,8 @@ class PublishAuthHalt extends Command
         $this->copyViews($views);
 
         $this->publishRoutes();
+
+        $this->updateControllers();
     }
 
     /**
@@ -103,5 +105,22 @@ class PublishAuthHalt extends Command
         $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/ui-routes.stub'));
         $this->filesystem->append(base_path('routes/web.php'), $routes);
         $this->info("Routes is updated");
+    }
+
+    /**
+     * Update auth controller.
+     */
+    protected function updateControllers()
+    {
+        $filePaths = [
+            app_path('Console/Commands/stubs/App/Http/Controllers/AuthControllerWithUi.stub') => app_path('Http/Controllers/AuthController.php'),
+            app_path('Console/Commands/stubs/App/Http/Controllers/ForgotPasswordControllerWithUi.stub') => app_path('Http/Controllers/ForgotPasswordController.php'),
+        ];
+
+        foreach ($filePaths as $sourcePath => $destinationPath) {
+            $controller = $this->filesystem->get($sourcePath);
+            $this->filesystem->put($destinationPath, $controller);
+            $this->info("$controller is updated with UI");
+        }
     }
 }
