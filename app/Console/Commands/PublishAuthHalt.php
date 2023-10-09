@@ -80,7 +80,7 @@ class PublishAuthHalt extends Command
     protected function copyViews($views)
     {
         foreach ($views as $view) {
-            $stubPath = app_path('Console/Commands/stubs/views/auth/' . $view . '.stub');
+            $stubPath = app_path('Console/Commands/stubs/views/auth/hx-' . $view . '.stub');
             $destinationPath = resource_path('views/auth/' . $view . '.blade.php');
             $this->makeDirectoryIfNeeded($destinationPath);
             $this->filesystem->copy($stubPath, $destinationPath);
