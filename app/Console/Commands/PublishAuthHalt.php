@@ -117,8 +117,8 @@ class PublishAuthHalt extends Command
     protected function updateControllers()
     {
         $filePaths = [
-            app_path('Console/Commands/stubs/App/Http/Controllers/AuthControllerWithUi.stub') => app_path('Http/Controllers/AuthController.php'),
-            app_path('Console/Commands/stubs/App/Http/Controllers/ForgotPasswordControllerWithUi.stub') => app_path('Http/Controllers/ForgotPasswordController.php'),
+            app_path('Console/Commands/stubs/App/Http/Controllers/AuthControllerWithUiHalt.stub') => app_path('Http/Controllers/AuthController.php'),
+            app_path('Console/Commands/stubs/App/Http/Controllers/ForgotPasswordControllerWithUiHalt.stub') => app_path('Http/Controllers/ForgotPasswordController.php'),
         ];
 
         foreach ($filePaths as $sourcePath => $destinationPath) {
