@@ -40,9 +40,9 @@ class AuthController extends Controller
         }
 
         if (auth()->attempt($credentials, $remember)) {
-            return response('Successfully log in', '200');
+            return response('Successfully log in <a href=' . route('admin.dashboard') . '>Visit Dashboard</a>');
         } else {
-            return response('Invalid credentials', '401');
+            return response('Invalid credentials');
         }
     }
 

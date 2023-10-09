@@ -65,6 +65,8 @@ class PublishAuthHalt extends Command
 
         $this->publishRoutes();
 
+        $this->addDashboard();
+
         $this->updateControllers();
 
         $this->updateMail();
@@ -126,10 +128,25 @@ class PublishAuthHalt extends Command
         $this->info("Controllers updated with UI");
     }
 
+    /**
+     * Update auth controller.
+     */
     protected function updateMail()
     {
         $routes = $this->filesystem->get(app_path('Console/Commands/stubs/views/emails/password_reset_ui.blade.php'));
         $this->filesystem->put(resource_path('views/emails/password_reset.blade.php'), $routes);
         $this->info("Email template updated");
+    }
+
+    /**
+     * Add base dashboard.
+     */
+    protected function addDashboard()
+    {
+        $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
+        $destinationPath = resource_path('views/admin/dashboard.blade.php');
+        $this->makeDirectoryIfNeeded($destinationPath);
+        $this->filesystem->copy($stubPath, $destinationPath);
+        $this->info("Admin dashboard created");
     }
 }
