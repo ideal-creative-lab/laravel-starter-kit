@@ -119,6 +119,32 @@ It will install authentication components such as controllers, requests, mail te
 
 `--tall` : Use this flag to publish TALL components. TALL components provide a more dynamic and interactive authentication UI using Livewire.
 
+##REMOVING
+
+If, for any reason, you wish to remove the installed components, you can follow these steps:
+
+1. **Rollback Database Migration:** First, if you installed authorization components, rollback the database migration associated with the authentication components using the `migrate:rollback` command.
+
+    ```
+    php artisan migrate:rollback --step=1
+    ```
+
+2. **Remove Authentication Components:** You can manually remove the authentication components that were published during installation. Typically, these components are found in the following directories:
+    - Controllers
+    - Requests
+    - Mail templates
+    - Routes
+    
+3. **Revert Routes:** If the install:auth command modified your routes file, make sure to manually revert these changes as needed.
+
+4. **Clean Up Views:** Delete the authentication-related Blade views from your resources/views directory. These views might be located in folders like auth or livewire.
+
+5. **Remove Tailwind CSS and Alpine.js Dependencies:** If you opted for HALT/TALL components, and you no longer need Tailwind CSS and Alpine.js, you can remove their dependencies from your project using Composer and NPM/Yarn.
+
+6. **Remove base packages**. If you need to remove base packages, you can do this using the ```php artisan composer remove package/name``` command
+   
+
+By following these steps, you can safely remove the installed authentication components from your Laravel application.
 
 ## Contribute
 
