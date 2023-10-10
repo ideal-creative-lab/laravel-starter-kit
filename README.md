@@ -94,7 +94,7 @@ Follow these steps to install and set up the project:
    php artisan serve
    ```
 
-11. Install frontend stack:
+11. Install frontend stack (To avoid duplication, ensure that you run the command once with a specific stack):
    ```
    php artisan install:frontend
    ```
@@ -113,6 +113,11 @@ If you'd like to install the authentication component using our Laravel Starter 
 install:auth
 ```
 It will install authentication components such as controllers, requests, mail templates, routes, and a database migration, enabling user authentication in a Laravel application.
+
+##OPTIONS
+`--halt` : Use this flag to publish HALT components. HALT components provide a simple and minimalistic authentication UI based on HTMX and Laravel.
+
+`--tall` : Use this flag to publish TALL components. TALL components provide a more dynamic and interactive authentication UI using Livewire.
 
 
 ## Contribute
