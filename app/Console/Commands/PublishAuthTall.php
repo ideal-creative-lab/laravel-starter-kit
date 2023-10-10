@@ -75,8 +75,8 @@ class PublishAuthTall extends Command
         $views = [
             'register',
             'login',
-            'forgot-password',
-            'reset-password',
+            'password-forget',
+            'password-reset',
         ];
 
         foreach ($views as $view) {
