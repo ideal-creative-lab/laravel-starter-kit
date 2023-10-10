@@ -1,8 +1,8 @@
 // Authentication Routes
 Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
-Route::post('/confirm/{token}', [\App\Http\Controllers\AuthController::class, 'confirm'])->name('confirm');
+Route::get('/confirm/{token}', [\App\Http\Controllers\AuthController::class, 'confirm'])->name('confirm');
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 //Password reset Routes
 Route::post('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'forgetPassword'])->name('password.forget');

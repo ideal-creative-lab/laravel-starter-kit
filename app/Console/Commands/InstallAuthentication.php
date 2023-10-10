@@ -13,7 +13,7 @@ class InstallAuthentication extends Command
      *
      * @var string
      */
-    protected $signature = 'install:auth';
+    protected $signature = 'install:auth {--halt : Publish HALT components} {--tall : Publish TALL components}';
 
     /**
      * The console command description.
@@ -48,9 +48,22 @@ class InstallAuthentication extends Command
         $this->copyStubs();
         $this->copyViews();
         $this->updateRoutes();
+
+        if ($this->option('halt')) {
+            $this->info('Publishing HALT components.');
+            $this->executeCommand('php artisan publish:auth-halt');
+        }
+
+        if ($this->option('tall')) {
+            $this->info('Publishing TALL components.');
+            //$this->call('php artisan publish:auth-tall');
+        }
+
         $this->createUsersTableMigration();
 
         $this->info('Authentication components installed successfully.');
+
+
     }
 
     /**
@@ -157,7 +170,6 @@ class InstallAuthentication extends Command
         if (!$process->isSuccessful()) {
             $this->error('Error executing command: ' . $command);
             $this->error($process->getErrorOutput());
-            exit(1);
         }
     }
 }
