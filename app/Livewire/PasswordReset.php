@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Livewire;
+
+use App\Services\PasswordResetService;
+use Livewire\Component;
+
+class PasswordReset extends Component
+{
+    protected $passwordResetService;
+    public $email, $password, $token;
+
+    /**
+     * Register component boot.
+     *
+     * @param PasswordResetService $passwordResetService
+     */
+    public function boot(PasswordResetService $passwordResetService)
+    {
+        $this->passwordResetService = $passwordResetService;
+    }
+
+    public function mount($token)
+    {
+        $this->token = $token;
+    }
+
+    public function resetPassword()
+    {
+        $this->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
+
+        $result = $this->passwordResetService->resetPassword(
+            $this->email,
+            $this->token,
+            $this->password
+        );
+
+        if($result){
+            session()->flash('success', 'Password reset successful!');
+        }else{
+            session()->flash('error', 'Password reset error!');
+        }
+    }
+
+
+
+    public function render()
+    {
+        return view('livewire.password-reset');
+    }
+}
