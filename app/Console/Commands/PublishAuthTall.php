@@ -54,20 +54,13 @@ class PublishAuthTall extends Command
      */
     protected function publishUIInterfaces()
     {
-        $views = [
-            'register',
-            'login',
-            'forgot-password',
-            'reset-password',
-        ];
+        $this->copyViews();
 
-        $this->copyViews($views);
+        $this->createLiveWireComponents();
+
+        $this->createLiveWireViews();
 
         $this->publishRoutes();
-
-        $this->addDashboard();
-
-        $this->updateControllers();
 
         $this->updateMail();
     }
@@ -77,8 +70,15 @@ class PublishAuthTall extends Command
      *
      * @param array $views
      */
-    protected function copyViews($views)
+    protected function copyViews()
     {
+        $views = [
+            'register',
+            'login',
+            'forgot-password',
+            'reset-password',
+        ];
+
         foreach ($views as $view) {
             $stubPath = app_path('Console/Commands/stubs/views/auth/lw-' . $view . '.stub');
             $destinationPath = resource_path('views/auth/' . $view . '.blade.php');
@@ -86,6 +86,8 @@ class PublishAuthTall extends Command
             $this->filesystem->copy($stubPath, $destinationPath);
             $this->info("$destinationPath created");
         }
+
+        $this->info("Base views created");
     }
 
     /**
@@ -102,30 +104,58 @@ class PublishAuthTall extends Command
     }
 
     /**
+     * Publish LiveWire components.
+     */
+    protected function createLiveWireComponents()
+    {
+        $components = [
+            'Login',
+            'PasswordForget',
+            'PasswordReset',
+            'Register',
+        ];
+
+        foreach ($components as $component) {
+            $stubPath = app_path('Console/Commands/stubs/App/Livewire/' . $component . '.stub');
+            $destinationPath = app_path('Livewire/' . $component . '.php');
+            $this->makeDirectoryIfNeeded($destinationPath);
+            $this->filesystem->copy($stubPath, $destinationPath);
+            $this->info("$component created");
+        }
+
+        $this->info("LiveWire components created");
+    }
+
+    /**
+     * Publish LiveWire views.
+     */
+    protected function createLiveWireViews()
+    {
+        $views = [
+            'login',
+            'password-forget',
+            'password-reset',
+            'register',
+        ];
+
+        foreach ($views as $view) {
+            $stubPath = app_path('Console/Commands/stubs/views/livewire/' . $view . '.stub');
+            $destinationPath = resource_path('views/livewire/' . $view . '.blade.php');
+            $this->makeDirectoryIfNeeded($destinationPath);
+            $this->filesystem->copy($stubPath, $destinationPath);
+            $this->info("$destinationPath created");
+        }
+
+        $this->info("LiveWire views created");
+    }
+
+    /**
      * Publish UI routes.
      */
     protected function publishRoutes()
     {
-        $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/ui-routes.stub'));
-        $this->filesystem->append(base_path('routes/web.php'), $routes);
+        $this->filesystem->copy(app_path('Console/Commands/stubs/routes/lw-web.stub'), base_path('routes/web.php'));
         $this->info("Routes updated");
-    }
-
-    /**
-     * Update auth controller.
-     */
-    protected function updateControllers()
-    {
-        $filePaths = [
-            app_path('Console/Commands/stubs/App/Http/Controllers/AuthControllerWithUi.stub') => app_path('Http/Controllers/AuthController.php'),
-            app_path('Console/Commands/stubs/App/Http/Controllers/ForgotPasswordControllerWithUi.stub') => app_path('Http/Controllers/ForgotPasswordController.php'),
-        ];
-
-        foreach ($filePaths as $sourcePath => $destinationPath) {
-            $controller = $this->filesystem->get($sourcePath);
-            $this->filesystem->put($destinationPath, $controller);
-        }
-        $this->info("Controllers updated with UI");
     }
 
     /**
@@ -136,17 +166,5 @@ class PublishAuthTall extends Command
         $routes = $this->filesystem->get(app_path('Console/Commands/stubs/views/emails/password_reset_ui.blade.php'));
         $this->filesystem->put(resource_path('views/emails/password_reset.blade.php'), $routes);
         $this->info("Email template updated");
-    }
-
-    /**
-     * Add base dashboard.
-     */
-    protected function addDashboard()
-    {
-        $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
-        $destinationPath = resource_path('views/admin/dashboard.blade.php');
-        $this->makeDirectoryIfNeeded($destinationPath);
-        $this->filesystem->copy($stubPath, $destinationPath);
-        $this->info("Admin dashboard created");
     }
 }
