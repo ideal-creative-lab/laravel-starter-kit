@@ -3,7 +3,7 @@
 Please follow the link below to reset your password:
 
 @component('mail::button', ['url' => route('password.reset.form', $token), 'color' => 'success'])
-    Reset Password
+Reset Password
 @endcomponent
 
 Best regards,<br>
