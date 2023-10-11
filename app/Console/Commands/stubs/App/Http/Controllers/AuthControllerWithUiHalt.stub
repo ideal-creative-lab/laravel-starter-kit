@@ -40,7 +40,7 @@ class AuthController extends Controller
         }
 
         if (auth()->attempt($credentials, $remember)) {
-            return back()->with(['success' => 'Successfully log in <a href=' . route('admin.dashboard') . '>Visit Dashboard</a>']);
+            return back()->with(['success' => 'Successfully log in']);
         } else {
             return back()->withErrors(['invalid' => 'Invalid credentials'])->withInput();
         }
@@ -73,7 +73,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return response('Logout successfully', '200');
+        return redirect(route('home'));
     }
 
     /**
