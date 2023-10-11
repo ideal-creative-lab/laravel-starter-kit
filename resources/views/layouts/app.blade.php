@@ -9,6 +9,7 @@
 </head>
 
 <body class="antialiased">
+<x-header-component/>
 @yield('content')
 </body>
 </html>

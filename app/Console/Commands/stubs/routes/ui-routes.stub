@@ -5,10 +5,3 @@ Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginFor
 //Password reset forms
 Route::get('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showForgetPasswordForm'])->name('password.forget.form');
 Route::get('/reset-password/{token}', [\App\Http\Controllers\ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset.form');
-
-//Admin panel
-Route::middleware('auth')->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
