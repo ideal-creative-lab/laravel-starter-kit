@@ -61,6 +61,8 @@ class InstallAuthentication extends Command
 
         $this->createUsersTableMigration();
 
+        $this->addDashboard();
+
         $this->info('Authentication components installed successfully.');
 
 
@@ -133,6 +135,17 @@ class InstallAuthentication extends Command
     }
 
     /**
+     * Add base dashboard.
+     */
+    public function addDashboard()
+    {
+        $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
+        $destinationPath = resource_path('views/admin/dashboard.blade.php');
+        $this->filesystem->copy($stubPath, $destinationPath);
+        $this->info('Dashboard created');
+    }
+
+    /**
      * Copy files to new path.
      */
     protected function copyFiles($filePaths)
@@ -140,7 +153,7 @@ class InstallAuthentication extends Command
         foreach ($filePaths as $sourcePath => $destinationPath) {
             $this->makeDirectoryIfNeeded($destinationPath);
             $this->filesystem->copy(app_path('Console/Commands/stubs/' . $sourcePath), $destinationPath);
-            $this->info("$destinationPath is created");
+            $this->info("$destinationPath created");
         }
     }
 
