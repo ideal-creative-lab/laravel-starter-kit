@@ -63,9 +63,9 @@ class InstallAuthentication extends Command
 
         $this->addDashboard();
 
+        $this->addPreline();
+
         $this->info('Authentication components installed successfully.');
-
-
     }
 
     /**
@@ -144,6 +144,25 @@ class InstallAuthentication extends Command
         $this->filesystem->copy($stubPath, $destinationPath);
         $this->info('Dashboard created');
     }
+
+    public function addPreline()
+    {
+        $answer = $this->ask('Do you want to install PrelineUI scripts (y/n)');
+
+        if (strtolower($answer) === 'y') {
+            $this->info('PrelineUI scripts installation initiated...');
+
+            $this->executeCommand('npm install preline');
+
+            $this->filesystem->copy(app_path('Console/Commands/stubs/config/preline-tailwind.stub'), base_path('tailwind.config.js'));
+            $this->filesystem->prepend(resource_path('js/app.js'), "import('preline')\n");
+
+            $this->info('PrelineUI scripts installation completed.');
+        } else {
+            $this->info('PrelineUI scripts installation skipped.');
+        }
+    }
+
 
     /**
      * Copy files to new path.
