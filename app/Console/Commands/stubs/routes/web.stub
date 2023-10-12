@@ -7,3 +7,10 @@ Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->
 //Password reset Routes
 Route::post('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'forgetPassword'])->name('password.forget');
 Route::post('/reset-password', [\App\Http\Controllers\ForgotPasswordController::class, 'resetPassword'])->name('password.reset');
+
+//Admin panel
+Route::middleware('auth')->group(function () {
+    Route::get('/admin', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+});
