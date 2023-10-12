@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Process\Process;
 
 class InstallBackendPackages extends Command
@@ -27,6 +29,7 @@ class InstallBackendPackages extends Command
     public function handle()
     {
         $availablePackages = [
+            'Without packages' => 'no_packages',
             'Laravel Request Docs' => 'addLaravelRequestDocs',
             'Laravel Sluggable Eloquent' => 'addLaravelSluggableEloquent',
             'Laravel Passport' => 'addLaravelPassport',
@@ -38,7 +41,7 @@ class InstallBackendPackages extends Command
         $installedPackages = [];
 
         foreach ($selectedPackages as $selectedPackage) {
-            if (isset($availablePackages[$selectedPackage])) {
+            if (isset($availablePackages[$selectedPackage]) && $availablePackages[$selectedPackage] != 'no_packages') {
                 $this->{$availablePackages[$selectedPackage]}();
                 $installedPackages[] = $selectedPackage;
             }
@@ -49,6 +52,8 @@ class InstallBackendPackages extends Command
         } else {
             $this->info('No packages selected for installation.');
         }
+
+        $this->installBackendSystem();
     }
 
     /**
@@ -63,6 +68,69 @@ class InstallBackendPackages extends Command
         $this->info("Adding $packageName...");
         $this->executeCommand($composerCommand);
         $this->info("$packageName successfully added, see documentation $documentationUrl");
+    }
+
+    protected function installBackendSystem()
+    {
+        $availableSystems = [
+            'Without CMS' => '',
+            'Laravel Nova' => 'installLaravelNova',
+            'Filament' => 'installFilament',
+            'Statamic' => 'installStatamic',
+        ];
+
+        $selectedSystem = $this->choice('Select backend content management system to install:', array_keys($availableSystems));
+
+        if (isset($availableSystems[$selectedSystem])) {
+            $this->{$availableSystems[$selectedSystem]}();
+        }
+    }
+
+    protected function installLaravelNova()
+    {
+        $email = $this->ask('Enter your nova licence email: ');
+        $key = $this->ask('Enter your nova licence key: ');
+
+        $this->info('License activation...');
+        $this->executeCommand("composer config http-basic.nova.laravel.com $email $key");
+
+        $this->info("Adding Laravel Nova...");
+        $this->executeCommand('composer config repositories.nova \'{"type": "composer", "url": "https://nova.laravel.com"}\' --file composer.json');
+        $this->executeCommand('composer require laravel/nova');
+
+        $this->executeCommand('php artisan nova:install');
+
+        $this->info('Database migration...');
+        $this->executeCommand("php artisan migrate");
+
+        $this->createBaseNovaUser();
+    }
+
+    protected function createBaseNovaUser()
+    {
+        $data = [
+            'name' => $this->ask('Name of the Nova User:'),
+            'email' => $this->ask('Email address of the Nova User:'),
+            'password' => Hash::make($this->secret('Password for the Nova User:')),
+            'is_admin' => true
+        ];
+
+        User::updateOrCreate(
+            ['email' => $data['email']],
+            $data
+        );
+
+        $this->info('User created successfully!');
+    }
+
+    protected function installFilament()
+    {
+        $this->info("Adding Filament");
+    }
+
+    protected function installStatamic()
+    {
+        $this->info("Adding Statamic");
     }
 
     /**
