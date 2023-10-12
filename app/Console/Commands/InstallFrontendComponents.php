@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
+use App\Enums\PackageManager;
 
 class InstallFrontendComponents extends Command
 {
@@ -21,6 +22,13 @@ class InstallFrontendComponents extends Command
      * @var string
      */
     protected $description = 'Install Tailwind CSS and selected frontend components.';
+
+    /**
+     * The name of the package manager to use.
+     *
+     * @var PackageManager
+     */
+    protected $manager;
 
     /**
      * Filesystem instance for file operations.
@@ -47,6 +55,9 @@ class InstallFrontendComponents extends Command
      */
     public function handle()
     {
+        $this->initPackageManager();
+        $this->executeCommand($this->manager . ' add -D axios vite laravel-vite-plugin');
+
         $this->info('Installing Tailwind CSS...');
 
         $this->installTailwindCssAndStandartJs();
@@ -76,7 +87,24 @@ class InstallFrontendComponents extends Command
                 $this->error('Invalid choice. No additional frontend stack will be installed.');
         }
 
-        $this->info('Frontend components installed. Please run npm run dev command to start.');
+        $this->info('Frontend components installed.');
+        $this->setPackageScripts();
+    }
+
+    /**
+     * Install and initialize the package manager.
+     *
+     * @return void
+     */
+    protected function initPackageManager()
+    {
+        $this->manager = $this->choice(
+            'Choose a package manager to install:',
+            PackageManager::getValues(),
+            0
+        );
+
+        $this->executeCommand($this->manager . ' init');
     }
 
     /**
@@ -87,10 +115,11 @@ class InstallFrontendComponents extends Command
     protected function installTailwindCssAndStandartJs()
     {
         $this->info('Installing Tailwind CSS dependencies...');
-        $this->executeCommand('npm install -D tailwindcss postcss autoprefixer');
+        $this->executeCommand($this->manager . ' add -D tailwindcss postcss autoprefixer');
 
         $this->info('Initializing Tailwind CSS configuration...');
-        $this->executeCommand('npx tailwindcss init -p');
+        $runExecutablesCommand = PackageManager::getRunExecutablesCommand($this->manager);
+        $this->executeCommand($runExecutablesCommand . ' tailwindcss init -p');
 
         $this->info('Updating tailwind.config.js...');
         $this->replaceTailwindConfig();
@@ -110,7 +139,7 @@ class InstallFrontendComponents extends Command
 
         $this->info('Installing Standart.JS dependencies...');
 
-        $this->executeCommand('npm install standard --save-dev');
+        $this->executeCommand($this->manager . ' add -D standard');
 
         $this->info('Standart.JS installed and configured successfully.');
 
@@ -125,7 +154,7 @@ class InstallFrontendComponents extends Command
     {
         $this->info('Installing AlpineJS and HTMX...');
 
-        $this->executeCommand('npm install -D alpinejs htmx.org');
+        $this->executeCommand($this->manager . ' add -D alpinejs htmx.org');
 
         $content = /** @lang JavaScript */
             <<<EOL
@@ -177,7 +206,7 @@ class InstallFrontendComponents extends Command
         $this->registerInertiaMiddleware();
         $this->info('Middleware configured.');
 
-        $this->executeCommand('npm install @inertiajs/svelte');
+        $this->executeCommand($this->manager . ' add @inertiajs/svelte');
         $content = $this->filesystem->get(app_path('Console/Commands/stubs/inertiajs/js/app.stub'));
         $this->updateAppJs($content);
         $this->info('Scripts configured.');
@@ -203,7 +232,7 @@ class InstallFrontendComponents extends Command
     protected function executeCommand($command)
     {
         $process = Process::fromShellCommandline($command, base_path());
-        $process->run();
+        $process->setTty(true)->run();
 
         if (!$process->isSuccessful()) {
             $this->error('Error executing command: ' . $command);
@@ -353,7 +382,7 @@ class InstallFrontendComponents extends Command
      */
     protected function configureSvelteVite()
     {
-        $this->executeCommand('npm install --save-dev @sveltejs/vite-plugin-svelte');
+        $this->executeCommand($this->manager . ' add -D @sveltejs/vite-plugin-svelte');
         $this->filesystem->copy(app_path('Console/Commands/stubs/inertiajs/vite.stub'), base_path('vite.config.js'));
         $this->info('Vite scripts configured');
     }
@@ -378,6 +407,30 @@ class InstallFrontendComponents extends Command
         $directory = dirname($path);
         if (!$this->filesystem->exists($directory)) {
             $this->filesystem->makeDirectory($directory, 0755, true, true);
+        }
+    }
+
+    /**
+     * Set package scripts to run the server and build the app.
+     * Provide instructions to add scripts to the package.json file, if the package manager is not NPM.
+     *
+     * @return void
+     */
+    protected function setPackageScripts()
+    {
+        if ($this->manager == PackageManager::NPM->value) {
+            $this->executeCommand($this->manager . ' pkg set scripts.dev="vite"');
+            $this->executeCommand($this->manager . ' pkg set scripts.build="vite build"');
+            $this->info('Please run ' . $this->manager . ' run dev command to start the server.');
+        } else {
+            $isBun = $this->manager == PackageManager::NPM->value;
+
+            $this->newLine(1);
+            $this->comment('Add `dev` script to the package.json file to run the server:');
+            $this->line($isBun ? 'bunx --bun vite' : 'vite');
+            $this->newLine(1);
+            $this->comment('And `build` script to build your app for production:');
+            $this->line($isBun ? 'bunx --bun vite build' : 'vite build');
         }
     }
 }
