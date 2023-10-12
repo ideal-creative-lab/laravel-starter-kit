@@ -89,6 +89,10 @@ class InstallBackendPackages extends Command
         $this->info("$packageName successfully added, see documentation $documentationUrl");
     }
 
+
+    /**
+     * Install one of backend systems.
+     */
     protected function installBackendSystem()
     {
         $availableSystems = [
@@ -105,6 +109,9 @@ class InstallBackendPackages extends Command
         }
     }
 
+    /**
+     * Install Laravel Nova.
+     */
     protected function installLaravelNova()
     {
         $email = $this->ask('Enter your nova licence email: ');
@@ -127,6 +134,9 @@ class InstallBackendPackages extends Command
         $this->info('Nova installed successfully! You may now log in at ' . url('/nova'));
     }
 
+    /**
+     * Install Filament.
+     */
     protected function installFilament()
     {
         $this->info('Requiring filament...');
@@ -142,14 +152,22 @@ class InstallBackendPackages extends Command
         $this->info('Filament installed successfully! You may now log in at ' . url('/admin'));
     }
 
-    protected function createBackendUser()
+    /**
+     * Create backend user.
+     *
+     * @param boolean $super
+     */
+    protected function createBackendUser($super = false)
     {
         $data = [
             'name' => $this->ask('Name of the Backend User:'),
             'email' => $this->ask('Email address of the Backend User:'),
             'password' => Hash::make($this->secret('Password for the Backend User:')),
-            'is_admin' => true
         ];
+
+        if ($super) {
+            $data['super'] = $super;
+        }
 
         User::updateOrCreate(
             ['email' => $data['email']],
@@ -159,9 +177,59 @@ class InstallBackendPackages extends Command
         $this->info('User created successfully!');
     }
 
+    /**
+     * Install Statamic.
+     */
     protected function installStatamic()
     {
-        $this->info("Adding Statamic");
+        $this->executeCommand('php artisan config:clear');
+        $this->updateComposer();
+
+        $this->info('Requiring Statamic...');
+        $this->executeCommand('composer require statamic/cms --with-dependencies');
+
+        $this->updateStatamicConfig();
+
+        $this->executeCommand('php please auth:migration');
+        $this->executeCommand('php artisan migrate');
+
+        $this->createBackendUser(true);
+
+        $this->info('Statamic installed successfully! You may now log in at ' . url('/cp'));
+    }
+
+    /**
+     * Update Statamic config files.
+     */
+    protected function updateStatamicConfig()
+    {
+        $this->filesystem->copy(app_path('Console/Commands/stubs/statamic/StatamicUser.stub'), app_path('Models/User.php'));
+        $this->filesystem->copy(app_path('Console/Commands/stubs/statamic/auth.stub'), config_path('auth.php'));
+        $this->filesystem->copy(app_path('Console/Commands/stubs/statamic/users.stub'), config_path('statamic/users.php'));
+        $this->info('Config files updated');
+    }
+
+    /**
+     * Update composer for statamic.
+     */
+    protected function updateComposer()
+    {
+        $composerPath = base_path('composer.json');
+
+        $composer = json_decode($this->filesystem->get($composerPath));
+
+        $allowPlugins = $composer->config->{'allow-plugins'} ?? [];
+        $allowPlugins->{'pixelfear/composer-dist-plugin'} = true;
+
+        $scripts = $composer->scripts->{'post-autoload-dump'} ?? [];
+        $scripts[] = '@php artisan statamic:install --ansi';
+
+        $composer->config->{'allow-plugins'} = $allowPlugins;
+        $composer->scripts->{'post-autoload-dump'} = $scripts;
+
+        $this->filesystem->put($composerPath, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+        $this->info('composer.json updated');
     }
 
     /**
