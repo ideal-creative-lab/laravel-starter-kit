@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Process\Process;
 
@@ -22,6 +23,24 @@ class InstallBackendPackages extends Command
      * @var string
      */
     protected $description = 'Install backend packages';
+
+    /**
+     * Filesystem instance for file operations.
+     *
+     * @var Filesystem
+     */
+    protected $filesystem;
+
+    /**
+     * Create a new command instance.
+     *
+     * @param Filesystem $filesystem
+     */
+    public function __construct(Filesystem $filesystem)
+    {
+        parent::__construct();
+        $this->filesystem = $filesystem;
+    }
 
     /**
      * Execute the console command.
@@ -103,15 +122,32 @@ class InstallBackendPackages extends Command
         $this->info('Database migration...');
         $this->executeCommand("php artisan migrate");
 
-        $this->createBaseNovaUser();
+        $this->createBackendUser();
+
+        $this->info('Nova installed successfully! You may now log in at ' . url('/nova'));
     }
 
-    protected function createBaseNovaUser()
+    protected function installFilament()
+    {
+        $this->info('Requiring filament...');
+        $this->executeCommand('composer require filament/filament:"^3.0-stable" -W');
+
+        $this->info('Filament installation...');
+        $this->executeCommand('php artisan filament:install --panels');
+
+        $this->createBackendUser();
+
+        $this->filesystem->copy(app_path('Console/Commands/stubs/routes/web-base.stub'), base_path('routes/web.php'));
+
+        $this->info('Filament installed successfully! You may now log in at ' . url('/admin'));
+    }
+
+    protected function createBackendUser()
     {
         $data = [
-            'name' => $this->ask('Name of the Nova User:'),
-            'email' => $this->ask('Email address of the Nova User:'),
-            'password' => Hash::make($this->secret('Password for the Nova User:')),
+            'name' => $this->ask('Name of the Backend User:'),
+            'email' => $this->ask('Email address of the Backend User:'),
+            'password' => Hash::make($this->secret('Password for the Backend User:')),
             'is_admin' => true
         ];
 
@@ -121,11 +157,6 @@ class InstallBackendPackages extends Command
         );
 
         $this->info('User created successfully!');
-    }
-
-    protected function installFilament()
-    {
-        $this->info("Adding Filament");
     }
 
     protected function installStatamic()
