@@ -61,9 +61,11 @@ class InstallAuthentication extends Command
 
         $this->createUsersTableMigration();
 
+        $this->addDashboard();
+
+        $this->addPreline();
+
         $this->info('Authentication components installed successfully.');
-
-
     }
 
     /**
@@ -133,6 +135,36 @@ class InstallAuthentication extends Command
     }
 
     /**
+     * Add base dashboard.
+     */
+    public function addDashboard()
+    {
+        $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
+        $destinationPath = resource_path('views/admin/dashboard.blade.php');
+        $this->filesystem->copy($stubPath, $destinationPath);
+        $this->info('Dashboard created');
+    }
+
+    public function addPreline()
+    {
+        $answer = $this->ask('Do you want to install PrelineUI scripts (y/n)');
+
+        if (strtolower($answer) === 'y') {
+            $this->info('PrelineUI scripts installation initiated...');
+
+            $this->executeCommand('npm install preline');
+
+            $this->filesystem->copy(app_path('Console/Commands/stubs/config/preline-tailwind.stub'), base_path('tailwind.config.js'));
+            $this->filesystem->prepend(resource_path('js/app.js'), "import('preline')\n");
+
+            $this->info('PrelineUI scripts installation completed.');
+        } else {
+            $this->info('PrelineUI scripts installation skipped.');
+        }
+    }
+
+
+    /**
      * Copy files to new path.
      */
     protected function copyFiles($filePaths)
@@ -140,7 +172,7 @@ class InstallAuthentication extends Command
         foreach ($filePaths as $sourcePath => $destinationPath) {
             $this->makeDirectoryIfNeeded($destinationPath);
             $this->filesystem->copy(app_path('Console/Commands/stubs/' . $sourcePath), $destinationPath);
-            $this->info("$destinationPath is created");
+            $this->info("$destinationPath created");
         }
     }
 

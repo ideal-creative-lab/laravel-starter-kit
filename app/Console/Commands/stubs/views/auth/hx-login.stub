@@ -22,7 +22,7 @@
                         </div>
                     @else
                     <!-- Form -->
-                    <form id="login-form" hx-post="{{ route('login') }}">
+                    <form id="login-form" hx-post="{{ route('login.form') }}">
                         @csrf
                         <div class="grid gap-y-4">
                             <!-- Form Group -->
