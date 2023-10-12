@@ -8,7 +8,8 @@
     @vite('resources/js/app.js')
 </head>
 
-<body class="antialiased">
+<body class="antialiased" id="content-wrapper">
+<x-header-component/>
 @yield('content')
 </body>
 </html>
