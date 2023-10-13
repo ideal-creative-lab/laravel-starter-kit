@@ -280,9 +280,7 @@ class InstallFrontendComponents extends Command
             $content = $this->filesystem->get($layoutFile);
             if (strpos($content, $script) === false) {
                 $content = str_replace('</head>', $script . "\n\t</head>", $content);
-                if ($script == '@livewireScripts') {
-                    $content = str_replace('</body>', $script . "\n\t</body>", $content);
-                } else {
+                if ($script == '@inertiaHead') {
                     $content = str_replace("@yield('content')", "@inertia", $content);
                 }
                 $this->filesystem->put($layoutFile, $content);
@@ -382,7 +380,8 @@ class InstallFrontendComponents extends Command
     protected function configureSvelteVite()
     {
         $this->executeCommand($this->manager . ' add -D @sveltejs/vite-plugin-svelte');
-        $this->filesystem->copy(app_path('Console/Commands/stubs/inertiajs/vite.stub'), base_path('vite.config.js'));
+        $this->filesystem->copy(app_path('Console/Commands/stubs/inertiajs/vite.stub'), base_path('vite.config.mjs'));
+        $this->filesystem->delete(base_path('vite.config.js'));
         $this->info('Vite scripts configured');
     }
 
