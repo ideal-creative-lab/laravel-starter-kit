@@ -13,7 +13,9 @@ class InstallAuthentication extends Command
      *
      * @var string
      */
-    protected $signature = 'install:auth {--halt : Publish HALT components} {--tall : Publish TALL components}';
+    protected $signature = 'install:auth
+                            {--halt : Publish HALT components}
+                            {--tall : Publish TALL components}';
 
     /**
      * The console command description.
@@ -56,7 +58,7 @@ class InstallAuthentication extends Command
 
         if ($this->option('tall')) {
             $this->info('Publishing TALL components.');
-            //$this->call('php artisan publish:auth-tall');
+            $this->call('php artisan publish:auth-tall');
         }
 
         $this->createUsersTableMigration();

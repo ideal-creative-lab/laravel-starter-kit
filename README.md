@@ -1,7 +1,7 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <h1 align="center">
-    <a href="https://moneysherlock.com/#gh-light-mode-only">
+    <a href="https://github.com/ideal-creative-lab/laravel-starter-kit">
         Laravel Starter Kit
     </a>
 </h1>
@@ -11,8 +11,8 @@
 </p>
 
 <h4 align="center">
-    <img src="https://img.shields.io/badge/release-v0.1.0-blue" alt="Project Version">
-    <img src="https://img.shields.io/badge/laravel-10.10-blueviolet" alt="Laravel Version">
+    <img src="https://img.shields.io/badge/release-v1.0.0-blue" alt="Project Version">
+    <img src="https://img.shields.io/badge/laravel-10.8-blueviolet" alt="Laravel Version">
     <img src="https://img.shields.io/badge/php-%3E=8.1-royalblue" alt="PHP Version">
     <img src="https://img.shields.io/badge/platform-*nix-lightgrey" alt="Platform">
     <img src="https://img.shields.io/badge/license-proprietary-green" alt="License">
@@ -41,111 +41,132 @@ Laravel Starter Kit includes the following packages and tools:
 
 - [Pest](https://pestphp.com/): A modern and elegant testing framework for writing tests in PHP.
 
-## ️Getting Started
+
+## ️ Getting Started
+These instructions will get you a copy of the project up and running on your local machine for development and testing
+purposes.
+
+### Prerequisites
+To run the project, you need to install [PHP](https://www.php.net/manual/en/install.php) and dependency manager
+[Composer](https://getcomposer.org) first.
 
 ### Installing
-
 Follow these steps to install and set up the project:
 
-1. Clone the repository from GitHub:
-   ```
-   git clone git@github.com:ideal-creative-lab/laravel-starter-kit.git
-   ```
-
-2. Navigate to the project directory:
-   ```
-   cd laravel-starter-kit
-   ```
-
-3. Install the project dependencies using Composer:
-   ```
-   composer install
-   ```
-
-4. Copy the `.env.example` file to `.env`:
-   ```
-   cp .env.example .env
-   ```
-
-5. Open the `.env` file in a text editor (e.g., vim) and update the necessary configuration values.
-
-6. Generate an application key:
-   ```
-   php artisan key:generate
-   ```
-
-7. For using <a href='https://laravel.com/docs/10.x/telescope'>laravel telescope</a> run following command:
-   ```
-   php artisan telescope:install
-   ```
-   
-8. Install necessary backend packages:
-   ``` 
-   php artisan install:backend
-   ``` 
-
-9. Run migration:
-   ```
-   php artisan migrate
-   ```
-
-10. Start the development server:
-   ```
-   php artisan serve
-   ```
-
-11. Install frontend stack (To avoid duplication, ensure that you run the command once with a specific stack):
-   ```
-   php artisan install:frontend
-   ```
-
-12. Build the project assets:
-   ```
-   npm run dev
-   ```
-
-You can now access the project by visiting the URL provided by the development server.
-
-## How to Install and Use the Authentication Component
-
-If you'd like to install the authentication component using our Laravel Starter Kit, please run following command:
-```
-install:auth
-```
-It will install authentication components such as controllers, requests, mail templates, routes, and a database migration, enabling user authentication in a Laravel application.
-
-##OPTIONS
-`--halt` : Use this flag to publish HALT components. HALT components provide a simple and minimalistic authentication UI based on HTMX and Laravel.
-
-`--tall` : Use this flag to publish TALL components. TALL components provide a more dynamic and interactive authentication UI using Livewire.
-
-##REMOVING
-
-If, for any reason, you wish to remove the installed components, you can follow these steps:
-
-1. **Rollback Database Migration:** First, if you installed authorization components, rollback the database migration associated with the authentication components using the `migrate:rollback` command.
-
-    ```
-    php artisan migrate:rollback --step=1
+1. Get the repo
+    ```zsh
+    git clone git@github.com:ideal-creative-lab/laravel-starter-kit.git
+    cd laravel-starter-kit
     ```
 
-2. **Remove Authentication Components:** You can manually remove the authentication components that were published during installation. Typically, these components are found in the following directories:
-    - Controllers
-    - Requests
-    - Mail templates
-    - Routes
-    
-3. **Revert Routes:** If the install:auth command modified your routes file, make sure to manually revert these changes as needed.
+2. Install PHP dependencies
+    ```zsh
+    composer install
+    ```
 
-4. **Clean Up Views:** Delete the authentication-related Blade views from your resources/views directory. These views might be located in folders like auth or livewire.
+3. Copy and edit the environment file
+    ```zsh
+    cp .env.example .env
+    ```
 
-5. **Remove Tailwind CSS and Alpine.js Dependencies:** If you opted for HALT/TALL components, and you no longer need Tailwind CSS and Alpine.js, you can remove their dependencies from your project using Composer and NPM/Yarn.
+4. Configure your database connection by editing the `.env` file using the Vim text editor
+    ```zsh
+    vim .env
+    ```
+    Make necessary changes to the environment variables and save the file.
 
-6. **Remove base packages**. If you need to remove base packages, you can do this using the ```php artisan composer remove package/name``` command
+5. Generate application key
+    ```zsh
+    php artisan key:generate
+    ```
+
+6. Install necessary [backend packages](https://github.com/ideal-creative-lab/laravel-starter-kit/wiki/How-to-install-backend-packages)
+    ```zsh
+    php artisan install:backend
+    ``` 
    
+7. Run migrations.
+    ```zsh
+    php artisan migrate
+    ```
 
-By following these steps, you can safely remove the installed authentication components from your Laravel application.
+8. Install [frontend stack](https://github.com/ideal-creative-lab/laravel-starter-kit/wiki/How-to-install-frontend-components) (To avoid duplication, ensure that you run the command once with a specific stack)
+    ```zsh
+    php artisan install:frontend
+    ```
+
+9. (optional) If you'd like to install the [authentication component](https://github.com/ideal-creative-lab/laravel-starter-kit/wiki/How-to-install-the-authentication-component) please run following command
+    ```zsh
+    php artisan install:auth
+    ```
+
+10. Start the server
+    ```zsh
+    php artisan serve
+    ```
+
+You should see a success message with host and port of the running server, by default it's `http://127.0.0.1:8000`.
+
+_For hot reloading you can use the Package Manager that you chose on step 8_
+
+### Server Requirements
+
+* **PHP** >= 8.1
+* **composer**
+* Ctype PHP Extension
+* cURL PHP Extension
+* DOM PHP Extension
+* Fileinfo PHP Extension
+* Filter PHP Extension
+* Hash PHP Extension
+* Mbstring PHP Extension
+* OpenSSL PHP Extension
+* PCRE PHP Extension
+* PDO PHP Extension
+* Session PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
+* **MariaDB**
+
+
+### Example Nginx Configuration
+```
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+    root /srv/example.com/public;
+ 
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+ 
+    index index.php;
+ 
+    charset utf-8;
+ 
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+ 
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+ 
+    error_page 404 /index.php;
+ 
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+ 
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+} 
+```
+
+### Laravel base config setup script
+You can skip install steps 1-5 by using ./setup.sh script. This script is a simple setup tool for a Laravel application. It copies the .env.example file to create an .env configuration file. It then installs Composer dependencies, generates an application key, and interacts with the user to set up a MySQL database and user. Finally, it updates the application's configuration with the provided database information and caches the configuration settings for improved performance.
 
 ## Contribute
-
 See [CONTRIBUTING.md](CONTRIBUTING.md) for ways to get started.
