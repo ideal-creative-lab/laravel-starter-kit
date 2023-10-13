@@ -104,7 +104,7 @@ class InstallBackendPackages extends Command
 
         $selectedSystem = $this->choice('Select backend content management system to install:', array_keys($availableSystems));
 
-        if (isset($availableSystems[$selectedSystem])) {
+        if (!empty($availableSystems[$selectedSystem])) {
             $this->{$availableSystems[$selectedSystem]}();
         }
     }

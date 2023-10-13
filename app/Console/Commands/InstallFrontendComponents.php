@@ -280,9 +280,7 @@ class InstallFrontendComponents extends Command
             $content = $this->filesystem->get($layoutFile);
             if (strpos($content, $script) === false) {
                 $content = str_replace('</head>', $script . "\n\t</head>", $content);
-                if ($script == '@livewireScripts') {
-                    $content = str_replace('</body>', $script . "\n\t</body>", $content);
-                } else {
+                if ($script == '@inertiaHead') {
                     $content = str_replace("@yield('content')", "@inertia", $content);
                 }
                 $this->filesystem->put($layoutFile, $content);
