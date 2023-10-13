@@ -80,7 +80,6 @@ class InstallFrontendComponents extends Command
                 $this->installLiveWire();
                 break;
             case 'InertiaJS + Svelte':
-                //TODO update stack installation
                 $this->installInertiaAndSvelte();
                 break;
             default:
