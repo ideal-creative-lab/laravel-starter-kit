@@ -44,7 +44,7 @@ Laravel Starter Kit includes the following packages and tools:
 
 ## ️ Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing
-purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+purposes.
 
 ### Prerequisites
 To run the project, you need to install [PHP](https://www.php.net/manual/en/install.php) and dependency manager
