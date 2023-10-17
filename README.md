@@ -26,13 +26,13 @@ The **Laravel Starter Kit** is a collection of tools and libraries designed to s
 
 ## Included Packages
 
-Laravel Starter Kit includes the following packages and tools:
+The **Laravel Starter Kit** includes the following packages and tools:
 
-- [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper): Enhances your Laravel development experience with IDE support.
-- [Laravel Lang](https://github.com/overtrue/laravel-lang): Simplifies language management in your Laravel applications, ideal for multilingual projects.
-- [Spatie's Ray](https://github.com/spatie/ray): A powerful real-time debugging tool that provides a new level of insight into your application.
-- [Laravel Telescope](https://laravel.com/docs/10.x/telescope): A full-featured debugging and introspection tool for your Laravel applications.
-- [Laravel Pint](https://laravel.com/docs/10.x/pint): A opinionated PHP code style fixer for your application.
+- [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper): Enhances the Laravel development experience with IDE support.
+- [Laravel Lang](https://github.com/overtrue/laravel-lang): Simplifies language management in Laravel applications, ideal for multilingual projects.
+- [Spatie's Ray](https://github.com/spatie/ray): A powerful real-time debugging tool that provides a new level of insight into Laravel applications.
+- [Laravel Telescope](https://laravel.com/docs/10.x/telescope): A full-featured debugging and introspection tool for Laravel applications.
+- [Laravel Pint](https://laravel.com/docs/10.x/pint): A opinionated PHP code style fixer for Laravel applications.
 - [Pest](https://pestphp.com/): A modern and elegant testing framework for writing tests in PHP.
 
 
