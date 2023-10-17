@@ -12,16 +12,14 @@
 </p>
 
 <h4 align="center">
-    <img src="https://img.shields.io/badge/release-v1.0.0-blue" alt="Project Version">
-    <img src="https://img.shields.io/badge/laravel-10.8-blueviolet" alt="Laravel Version">
+    <img src="https://img.shields.io/badge/laravel-10.10-blueviolet" alt="Laravel Version">
     <img src="https://img.shields.io/badge/php-%3E=8.1-royalblue" alt="PHP Version">
-    <img src="https://img.shields.io/badge/platform-*nix-lightgrey" alt="Platform">
-    <img src="https://img.shields.io/badge/license-proprietary-green" alt="License">
+    <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </h4>
 
 ## Introduction
 
-**Laravel Starter Kit** is a collection of tools and libraries to make developing your Laravel projects easier. This set includes several useful packages and tools that will help you quickly get started and easily develop web applications in Laravel.
+The **Laravel Starter Kit** is a collection of tools and libraries designed to speed up the initial bootstrapping process for new Laravel projects. It includes several useful packages and tools that will help you get started quickly and easily developing web applications in Laravel.
 
 
 **⚠️ Before contributing to the project, please, carefully read through this README document.**
