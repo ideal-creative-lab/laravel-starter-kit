@@ -1,0 +1,20 @@
+name: 'Auto Deploy'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ploi-deploy:
+    name: 'Ploi Deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy
+        uses: Glennmen/ploi-deploy-action@v1.2.0
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
