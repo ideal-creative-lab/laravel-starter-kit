@@ -109,6 +109,17 @@ You should see a success message with host and port of the running server, by de
 
 _For hot reloading you can use the Package Manager that you chose on step 8_
 
+### CI/CD
+
+You can use [Auto Deploy Github Action](/.github/workflows/deploy.yml) to deploy your project to [Ploi](https://ploi.io). It will be triggered on push to `main` branch, you can change it, if you want. The following steps will help you get started:
+
+1. Add your app to the Ploi server.
+2. Open your app in the control panel.
+3. Press the `Repository` tab.
+4. Scroll down to the `Deploy Webhook URL` section.
+5. Copy the webhook URL.
+6. Add the link to the github secrets of the app repository.
+
 ### Server Requirements
 
 * **PHP** >= 8.1
