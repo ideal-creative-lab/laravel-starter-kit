@@ -1,8 +1,9 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <h1 align="center">
-    <a href="https://github.com/ideal-creative-lab/laravel-starter-kit">
-        Laravel Starter Kit
+    <a href="https://github.com/ideal-creative-lab/laravel-starter-kit#gh-dark-mode-only">
+        <img src="./.github/assets/laravel-starter-kit-dark.svg" alt="Laravel Starter Kit">
+    </a>
+    <a href="https://github.com/ideal-creative-lab/laravel-starter-kit#gh-light-mode-only">
+        <img src="./.github/assets/laravel-starter-kit-light.svg" alt="Laravel Starter Kit">
     </a>
 </h1>
 
