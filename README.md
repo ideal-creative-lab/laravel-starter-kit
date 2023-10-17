@@ -57,7 +57,7 @@ To run the project, you must first install PHP and the dependency manager Compos
 ## ️Installation
 Follow these steps to install and set up your project:
 
-> [!INFO]
+> [!NOTE]
 > To streamline the installation process, we've provided a setup script, `./setup.sh`. This script is designed to automate the initial setup steps for a Laravel application, saving you time and ensuring a consistent setup.
 
 1. Clone the repository:
@@ -101,12 +101,11 @@ php artisan migrate
 ```
 
 9. Install [frontend stack](https://github.com/ideal-creative-lab/laravel-starter-kit/wiki/How-to-install-frontend-components):
-> [!WARNING]
-> To avoid duplication, make sure you run the command once for a specific stack!
-
 ```zsh
 php artisan install:frontend
 ```
+> [!WARNING]
+> To avoid duplication, make sure you run the command once for a specific stack!
 
 10. **_(Optional)_** Install the [authentication component](https://github.com/ideal-creative-lab/laravel-starter-kit/wiki/How-to-install-the-authentication-component):
 ```zsh
@@ -120,7 +119,7 @@ php artisan serve
 
 You should see a success message with the host and port of the running server, which is [http://127.0.0.1:8000](http://127.0.0.1:8000) by default.
 
-> [!INFO]
+> [!NOTE]
 > For hot reloading, you can use the package manager you selected in step 9.
 
 ## Usage
