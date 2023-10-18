@@ -86,6 +86,9 @@ class InstallFrontendComponents extends Command
                 $this->error('Invalid choice. No additional frontend stack will be installed.');
         }
 
+        $this->info('Adding CI GitHub Actions...');
+        $this->executeCommand('cp ./.github/workflows/templates/build/' . $this->manager . '.yml .github/workflows/build.yml');
+
         $this->info('Frontend components installed.');
         $this->setPackageScripts();
     }
