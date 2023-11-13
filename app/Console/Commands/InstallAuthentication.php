@@ -53,12 +53,12 @@ class InstallAuthentication extends Command
 
         if ($this->option('halt')) {
             $this->info('Publishing HALT components.');
-            $this->executeCommand('php artisan publish:auth-halt');
+            $this->executeCommand('php artisan auth:halt');
         }
 
         if ($this->option('tall')) {
             $this->info('Publishing TALL components.');
-            $this->call('php artisan publish:auth-tall');
+            $this->executeCommand('php artisan auth:tall');
         }
 
         $this->createUsersTableMigration();

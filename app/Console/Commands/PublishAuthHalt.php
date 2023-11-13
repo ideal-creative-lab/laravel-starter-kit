@@ -12,7 +12,7 @@ class PublishAuthHalt extends Command
      *
      * @var string
      */
-    protected $signature = 'publish:auth-halt';
+    protected $signature = 'auth:halt';
 
     /**
      * The console command description.
