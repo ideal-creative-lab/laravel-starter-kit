@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Providers\RouteServiceProvider;
 use Livewire\Component;
 
 class Login extends Component
@@ -11,7 +12,7 @@ class Login extends Component
     public function login()
     {
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            return redirect()->route('home');
+            return redirect(RouteServiceProvider::HOME);;
         } else {
             $this->error = 'Invalid credentials.';
         }
