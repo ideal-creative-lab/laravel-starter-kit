@@ -106,8 +106,13 @@ class PublishAuthHalt extends Command
      */
     protected function publishRoutes()
     {
-        $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/ui-routes.stub'));
-        $this->filesystem->append(base_path('routes/web.php'), $routes);
+        $routes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/auth.stub'));
+        $baseRoutes = $this->filesystem->get(app_path('Console/Commands/stubs/routes/web-base.stub'));
+
+        $this->filesystem->put(base_path('routes/web.php'), $baseRoutes);
+        $this->filesystem->put(base_path('routes/auth.php'), $routes);
+        $this->filesystem->append(base_path('routes/web.php'), "require __DIR__.'/auth.php';");
+
         $this->info("Routes updated");
     }
 

@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::middleware('guest')->group(function () {
+    // Authentication Routes
+    Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
+    Route::get('/confirm/{token}', [\App\Http\Controllers\AuthController::class, 'confirm'])->name('confirm');
+    Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+
+    //Password reset Routes
+    Route::post('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'forgetPassword'])->name('password.forget');
+    Route::post('/reset-password', [\App\Http\Controllers\ForgotPasswordController::class, 'resetPassword'])->name('password.reset');
+
+    // Authentication forms
+    Route::get('/register', [\App\Http\Controllers\AuthController::class, 'showRegisterForm'])->name('register.form');
+    Route::get('/login', [\App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login.form');
+
+    //Password reset forms
+    Route::get('/forget-password', [\App\Http\Controllers\ForgotPasswordController::class, 'showForgetPasswordForm'])->name('password.forget.form');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset.form');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+});
