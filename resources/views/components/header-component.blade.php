@@ -15,11 +15,13 @@
         </div>
         <div id="navbar-collapse-with-animation" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
             <div class="flex flex-col gap-y-4 gap-x-0 mt-5 sm:flex-row sm:items-center sm:justify-end sm:gap-y-0 sm:gap-x-7 sm:mt-0 sm:pl-7">
-                <a class="font-medium text-blue-600 sm:py-6 dark:text-blue-500" href="{{ \App\Providers\RouteServiceProvider::HOME}}" aria-current="page">Home</a>
+                <a class="font-medium text-blue-600 sm:py-6 dark:text-blue-500" href="{{ \App\Providers\RouteServiceProvider::HOME }}" aria-current="page">Home</a>
                 @if(auth()->user())
-                    <a class="flex items-center gap-x-2 font-medium text-gray-500 hover:text-blue-600 sm:border-l sm:border-gray-300 sm:my-6 sm:pl-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500" href="{{ route('admin.dashboard') }}">
-                        Dashboard
-                    </a>
+                    @if(Route::has('admin.dashboard'))
+                        <a class="flex items-center gap-x-2 font-medium text-gray-500 hover:text-blue-600 sm:border-l sm:border-gray-300 sm:my-6 sm:pl-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500" href="{{ route('admin.dashboard') }}">
+                            Dashboard
+                        </a>
+                    @endif
                 @else
                     @if(Route::has('login.form'))
                         <a class="flex items-center gap-x-2 font-medium text-gray-500 hover:text-blue-600 sm:border-l sm:border-gray-300 sm:my-6 sm:pl-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500" href="{{ route('login.form') }}">

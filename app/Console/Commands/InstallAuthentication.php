@@ -102,6 +102,7 @@ class InstallAuthentication extends Command
         $views = [
             'views/emails/account_confirmation.blade.php' => base_path('/resources/views/emails/account_confirmation.blade.php'),
             'views/emails/password_reset.blade.php' => base_path('/resources/views/emails/password_reset.blade.php'),
+            'views/auth/confirm.stub' => base_path('/resources/views/auth/confirm.blade.php'),
         ];
 
         $this->copyFiles($views);
