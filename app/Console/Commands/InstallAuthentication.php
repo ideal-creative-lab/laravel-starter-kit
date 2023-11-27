@@ -145,6 +145,10 @@ class InstallAuthentication extends Command
         $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
         $destinationPath = resource_path('views/admin/dashboard.blade.php');
         $this->filesystem->copy($stubPath, $destinationPath);
+
+        $layout = $this->filesystem->get(resource_path('views/layouts/app.blade.php'));
+        $this->filesystem->put(resource_path('views/layouts/admin.blade.php'), str_replace('<x-header-component/>', '', $layout));
+
         $this->info('Dashboard created');
     }
 
