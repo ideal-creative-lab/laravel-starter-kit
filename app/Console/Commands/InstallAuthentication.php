@@ -67,7 +67,7 @@ class InstallAuthentication extends Command
 
         $this->addPreline();
 
-        $this->info('Authentication components installed successfully.');
+        $this->info('Authentication components installed successfully. Please run command for building assets.');
     }
 
     /**
