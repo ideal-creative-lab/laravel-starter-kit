@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Providers\RouteServiceProvider;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
@@ -73,7 +74,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return redirect(route('home'));
+        return redirect(RouteServiceProvider::HOME);
     }
 
     /**

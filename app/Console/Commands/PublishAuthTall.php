@@ -12,7 +12,7 @@ class PublishAuthTall extends Command
      *
      * @var string
      */
-    protected $signature = 'publish:auth-tall';
+    protected $signature = 'auth:tall';
 
     /**
      * The console command description.

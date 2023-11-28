@@ -32,6 +32,11 @@ class Register extends Component
             'password' => 'required|min:8',
         ]);
 
+        if (User::where('email', $this->email)->first()) {
+            session()->flash('error', 'User with this email already exists.');
+            return;
+        }
+
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
@@ -41,7 +46,7 @@ class Register extends Component
 
         $this->confirmationService->sendConfirmationEmail($user);
 
-        session()->flash('success', 'Registration successful!');
+        session()->flash('success', 'Registration successful! Check your email to confirm.');
     }
 
     public function render()

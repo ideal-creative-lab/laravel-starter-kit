@@ -53,12 +53,12 @@ class InstallAuthentication extends Command
 
         if ($this->option('halt')) {
             $this->info('Publishing HALT components.');
-            $this->executeCommand('php artisan publish:auth-halt');
+            $this->executeCommand('php artisan auth:halt');
         }
 
         if ($this->option('tall')) {
             $this->info('Publishing TALL components.');
-            $this->call('php artisan publish:auth-tall');
+            $this->executeCommand('php artisan auth:tall');
         }
 
         $this->createUsersTableMigration();
@@ -67,7 +67,7 @@ class InstallAuthentication extends Command
 
         $this->addPreline();
 
-        $this->info('Authentication components installed successfully.');
+        $this->info('Authentication components installed successfully. Please run command for building assets.');
     }
 
     /**
@@ -102,6 +102,7 @@ class InstallAuthentication extends Command
         $views = [
             'views/emails/account_confirmation.blade.php' => base_path('/resources/views/emails/account_confirmation.blade.php'),
             'views/emails/password_reset.blade.php' => base_path('/resources/views/emails/password_reset.blade.php'),
+            'views/auth/confirm.stub' => base_path('/resources/views/auth/confirm.blade.php'),
         ];
 
         $this->copyFiles($views);
@@ -144,6 +145,10 @@ class InstallAuthentication extends Command
         $stubPath = app_path('Console/Commands/stubs/views/admin/dashboard.stub');
         $destinationPath = resource_path('views/admin/dashboard.blade.php');
         $this->filesystem->copy($stubPath, $destinationPath);
+
+        $layout = $this->filesystem->get(resource_path('views/layouts/app.blade.php'));
+        $this->filesystem->put(resource_path('views/layouts/admin.blade.php'), str_replace('<x-header-component/>', '', $layout));
+
         $this->info('Dashboard created');
     }
 
