@@ -63,6 +63,8 @@ class PublishAuthTall extends Command
         $this->publishRoutes();
 
         $this->updateMail();
+
+        $this->removeBaseAuth();
     }
 
     /**
@@ -166,5 +168,20 @@ class PublishAuthTall extends Command
         $routes = $this->filesystem->get(app_path('Console/Commands/stubs/views/emails/password_reset_ui.blade.php'));
         $this->filesystem->put(resource_path('views/emails/password_reset.blade.php'), $routes);
         $this->info("Email template updated");
+    }
+
+    protected function removeBaseAuth(){
+        $stubs = [
+            app_path('Http/Controllers/AuthController.php'),
+            app_path('Http/Controllers/ForgotPasswordController.php'),
+            app_path('Http/Requests/LoginRequest.php'),
+            app_path('Http/Requests/PasswordResetRequest.php'),
+            app_path('Http/Requests/PasswordUpdateRequest.php'),
+            app_path('Http/Requests/RegisterRequest.php'),
+        ];
+
+        foreach ($stubs as $stub) {
+            $this->filesystem->delete($stub);
+        }
     }
 }

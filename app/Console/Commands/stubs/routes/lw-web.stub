@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Providers\RouteServiceProvider;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,7 +16,11 @@ Route::view('password-forget','auth.password-forget')->name('password.forget.for
 Route::view('password-reset/{token}','auth.password-reset')->name('password.reset.form');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
+    Route::get('/logout', function() {
+        auth()->logout();
+        return redirect(RouteServiceProvider::HOME);
+    })->name('logout');
+
     Route::get('/admin', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
